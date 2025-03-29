@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ứng dụng Quản lý Stress & Lo âu</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style>
+      /* Định nghĩa màu sắc và kiểu chữ theo nguyên tắc thiết kế */
+      :root {
+        --primary-color: #4A90E2;  /* Màu xanh dương nhạt */
+        --secondary-color: #FF6B6B; /* Màu cam */
+        --text-color: #333333;
+        --background-color: #F5F5F5;
+        --card-background: #FFFFFF;
+        --border-color: #E0E0E0;
+        --accent-color: #8884d8;
+      }
+      body {
+        font-family: 'Roboto', sans-serif;
+        background-color: var(--background-color);
+        color: var(--text-color);
+        margin: 0;
+        padding: 0;
+      }
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 16px;
+      }
+      .app-header {
+        background-color: var(--card-background);
+        padding: 16px 0;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .app-header h1 {
+        color: var(--primary-color);
+        margin: 0;
+        font-size: 24px;
+        font-weight: 700;
+        animation: fadeIn 1s ease, colorChange 2s infinite alternate;
+      }
+      @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+      }
+      @keyframes colorChange {
+        from { color: var(--primary-color); }
+        to { color: var(--accent-color); }
+      }
+      .main-content {
+        padding: 16px 0;
+        min-height: calc(100vh - 130px); /* Để footer luôn ở cuối trang */
+      }
+      .bottom-nav {
+        background-color: var(--card-background);
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        padding: 8px 0;
+        box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease;
+      }
+      .bottom-nav:hover {
+        transform: translateY(-5px);
+      }
+      .nav-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        color: #777;
+        text-decoration: none;
+        padding: 8px;
+        transition: color 0.3s ease;
+      }
+      .nav-item i {
+        font-size: 24px;
+        margin-bottom: 4px;
+      }
+      .nav-item.active {
+        color: var(--primary-color);
+        font-weight: 500;
+      }
+      .nav-item:hover {
+        color: var(--primary-color);
+        transform: scale(1.1);
+      }
+      .card {
+        background-color: var(--card-background);
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        padding: 16px;
+        margin-bottom: 16px;
+        opacity: 0;
+        animation: slideIn 0.5s ease forwards;
+      }
+       @keyframes slideIn {
+        from {
+            transform: translateY(20px);
+            opacity: 0;
+        }
+        to {
+            transform: translateY(0);
+            opacity: 1;
+        }
+       }
+      .mood-icon {
+        font-size: 48px;
+        margin-bottom: 16px;
+        text-align: center;
+        animation: pulse 2s infinite alternate;
+      }
+      @keyframes pulse {
+        from { transform: scale(1); }
+        to { transform: scale(1.1); }
+      }
+      .emotion-slider {
+        width: 100%;
+        -webkit-appearance: none;
+        height: 6px;
+        border-radius: 5px;
+        background: #ddd;
+        outline: none;
+        -webkit-transition: .2s;
+        transition: opacity .2s;
+      }
+      .emotion-slider::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 16px;
+        height: 16px;
+        border-radius: 50%;
+        background: var(--primary-color);
+        cursor: pointer;
+        transition: transform 0.2s ease;
+      }
+      .emotion-slider::-webkit-slider-thumb:hover,
+      .emotion-slider::-moz-range-thumb:hover {
+        transform: scale(1.2);
+      }
+      .emotion-slider::-moz-range-thumb {
+        width: 16px;
+        height: 16px;
+        border-radius: 50%;
+        background: var(--primary-color);
+        cursor: pointer;
+        transition: transform 0.2s ease;
+      }
+      .survey-question {
+        font-size: 18px;
+        margin-bottom: 12px;
+        color: var(--text-color);
+      }
+      .survey-option {
+        padding: 10px 16px;
+        border-radius: 24px;
+        border: 1px solid var(--border-color);
+        margin-right: 8px;
+        margin-bottom: 8px;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, transform 0.2s ease;
+      }
+      .survey-option:hover {
+        background-color: var(--primary-color);
+        color: white;
+        border-color: var(--primary-color);
+        transform: scale(1.1);
+      }
+      .survey-option.selected {
+        background-color: var(--primary-color);
+        color: white;
+        border-color: var(--primary-color);
+      }
+      .task-card {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 16px;
+        background-color: var(--card-background);
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        margin-bottom: 16px;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+      }
+      .task-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      }
+      .task-info {
+        margin-right: 16px;
+      }
+      .task-progress {
+        width: 100%;
+        height: 8px;
+        background-color: #ddd;
+        border-radius: 4px;
+        margin: 8px 0;
+        position: relative;
+        overflow: hidden;
+      }
+      .task-progress-bar {
+        height: 100%;
+        background-color: var(--primary-color);
+        border-radius: 4px;
+        width: 0;
+        transition: width 0.5s ease;
+      }
+       .chat-message {
+        padding: 12px;
+        border-radius: 20px;
+        margin-bottom: 8px;
+        max-width: 80%;
+        display: inline-block;
+        opacity: 0;
+        animation: fadeIn 0.5s ease forwards;
+        position: relative;
+      }
+      .chat-message.ai {
+        background-color: var(--primary-color);
+        color: white;
+        border-bottom-left-radius: 4px;
+        animation-delay: 0.2s;
+      }
+      .chat-message.user {
+        background-color: #e0e0e0;
+        color: var(--text-color);
+        align-self: flex-end;
+        border-bottom-right-radius: 4px;
+        animation-delay: 0.2s;
+      }
+      @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+      }
+      .input-container {
+        display: flex;
+        align-items: center;
+        margin-top: 16px;
+      }
+      .text-input {
+        flex: 1;
+        padding: 10px;
+        border: 1px solid var(--border-color);
+        border-radius: 24px;
+        margin-right: 8px;
+        font-size: 16px;
+        transition: border-color 0.2s ease;
+      }
+      .text-input:focus {
+        outline: none;
+        border-color: var(--accent-color);
+        box-shadow: 0 0 5px rgba(136, 132, 216, 0.3);
+      }
+      .send-button {
+        padding: 10px 16px;
+        background-color: var(--primary-color);
+        color: white;
+        border-radius: 24px;
+        cursor: pointer;
+        transition: background-color 0.3s ease, transform 0.2s ease;
+      }
+      .send-button:hover {
+        background-color: var(--accent-color);
+        transform: scale(1.1);
+      }
+      .specialist-card {
+        display: flex;
+        padding: 16px;
+        background-color: var(--card-background);
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        margin-bottom: 16px;
+        align-items: flex-start;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+      }
+      .specialist-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      }
+      .specialist-image {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        margin-right: 16px;
+        object-fit: cover;
+        transition: transform 0.3s ease;
+      }
+      .specialist-image:hover {
+        transform: scale(1.2);
+      }
+      .specialist-info {
+        flex: 1;
+      }
+      .specialist-name {
+        font-size: 18px;
+        font-weight: 500;
+        color: var(--text-color);
+        margin-bottom: 8px;
+      }
+      .specialist-expertise {
+        font-size: 14px;
+        color: #555;
+        margin-bottom: 4px;
+      }
+      .rating {
+        display: flex;
+        align-items: center;
+        margin-bottom: 8px;
+      }
+      .rating i {
+        color: #FFC107;
+        margin-right: 4px;
+        animation: starPulse 1s infinite alternate;
+      }
+      @keyframes starPulse {
+        from { transform: scale(1); }
+        to { transform: scale(1.2); }
+      }
+       .profile-header {
+        display: flex;
+        align-items: center;
+        padding: 16px 0;
+        border-bottom: 1px solid var(--border-color);
+        margin-bottom: 16px;
+      }
+      .profile-avatar {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        margin-right: 16px;
+        object-fit: cover;
+        transition: transform 0.3s ease;
+      }
+      .profile-avatar:hover {
+        transform: scale(1.1);
+      }
+      .profile-info h2 {
+        margin: 0 0 8px 0;
+        font-size: 20px;
+        color: var(--text-color);
+      }
+      .profile-info p {
+        margin: 0;
+        font-size: 14px;
+        color: #777;
+      }
+      .edit-profile-button {
+        margin-top: 16px;
+        transition: background-color 0.3s ease, transform 0.2s ease;
+      }
+      .edit-profile-button:hover {
+        background-color: var(--accent-color);
+        transform: scale(1.1);
+      }
+      .history-item {
+        padding: 12px 0;
+        border-bottom: 1px solid var(--border-color);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        opacity: 0;
+        animation: fadeIn 0.5s ease forwards;
+        animation-delay: 0.3s;
+      }
+      .history-item span {
+        font-size: 16px;
+        color: var(--text-color);
+      }
+      .section-title {
+        font-size: 20px;
+        font-weight: 500;
+        color: var(--text-color);
+        margin-bottom: 16px;
+        padding-left: 16px;
+        transition: color 0.3s ease;
+      }
+      .section-title:hover {
+        color: var(--primary-color);
+      }
+    </style>
+</head>
+<body class="bg-gray-100">
+    <div class="container">
+        <header class="app-header">
+            <h1>Stress & Anxiety Manager</h1>
+            <button id="menu-button" class="material-icons">menu</button>
+        </header>
+        <main class="main-content">
+            <section id="home" class="page" style="display: block;">
+                <div class="card">
+                    <h2 class="text-2xl font-semibold mb-4">Chào bạn, [Tên người dùng]!</h2>
+                    <p class="mb-4">Hôm nay bạn cảm thấy thế nào?</p>
+                    <button id="start-survey" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full">
+                        <i class="material-icons mr-2">mood</i> Bắt đầu khảo sát
+                    </button>
+                </div>
+                <div class="card">
+                    <h2 class="text-xl font-semibold mb-2">Tổng quan tâm trạng</h2>
+                    <div id="mood-chart" class="mb-4">
+                       {/* Biểu đồ tâm trạng */}
+                       <p class="text-gray-500 text-center">Biểu đồ tâm trạng của bạn trong tuần</p>
+                    </div>
+                    <p class="text-sm text-gray-600">Bạn đã hoàn thành <span id="tasks-completed">3/5</span> nhiệm vụ hôm nay</p>
+                </div>
+                <div class="card">
+                    <h2 class="text-xl font-semibold mb-2">Lời khuyên từ AI</h2>
+                    <p id="ai-advice" class="mb-4 text-gray-700">"Bạn rất tuyệt vời, hãy dành 5 phút thư giãn nhé!"</p>
+                     <div class="mt-4 p-4 bg-gradient-to-r from-blue-100 to-purple-100 rounded-lg shadow-md border border-gray-200">
+                        <h3 class="text-lg font-semibold text-gray-800 mb-2">Góc thư giãn</h3>
+                        <ul class="list-disc list-inside text-gray-700">
+                            <li><a href="#" class="hover:text-blue-500 transition-colors">Bài tập thở 4-7-8</a></li>
+                            <li><a href="#" class="hover:text-blue-500 transition-colors">Nhạc thiền nhẹ nhàng</a></li>
+                            <li><a href="#" class="hover:text-blue-500 transition-colors">Hướng dẫn thiền định</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="card">
+                    <h2 class="text-xl font-semibold mb-2">Nhiệm vụ ưu tiên</h2>
+                    <div class="task-card">
+                        <div class="task-info">
+                            <h3 id="priority-task-name" class="text-lg font-semibold">Thiền 10 phút</h3>
+                            <p class="text-sm text-gray-500">Phần thưởng: 100 điểm</p>
+                            <div class="task-progress">
+                              <div class="task-progress-bar" style="width: 20%;"></div>
+                            </div>
+                        </div>
+                        <button class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-full">Bắt đầu</button>
+                    </div>
+                     <div class="mt-6">
+                        <h4 class="text-md font-semibold text-gray-700 mb-2">Các nhiệm vụ khác:</h4>
+                        <div class="flex space-x-4 overflow-x-auto">
+                            <div class="bg-white rounded-lg shadow-sm p-4 w-48 flex-shrink-0 border border-gray-200">
+                                <h5 class="text-md font-semibold text-gray-800 mb-2">Đi bộ</h5>
+                                <p class="text-sm text-gray-600">30 phút</p>
+                            </div>
+                            <div class="bg-white rounded-lg shadow-sm p-4 w-48 flex-shrink-0 border border-gray-200">
+                                 <h5 class="text-md font-semibold text-gray-800 mb-2">Yoga</h5>
+                                <p class="text-sm text-gray-600">20 phút</p>
+                            </div>
+                            <div class="bg-white rounded-lg shadow-sm p-4 w-48 flex-shrink-0 border border-gray-200">
+                                <h5 class="text-md font-semibold text-gray-800 mb-2">Viết nhật ký</h5>
+                                <p class="text-sm text-gray-600">15 phút</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <section id="survey" class="page" style="display: none;">
+                <div class="card">
+                    <h2 class="text-2xl font-semibold mb-4">Khảo sát tâm trạng</h2>
+                    <p class="survey-question">Bạn cảm thấy thế nào hôm nay?</p>
+                    <div class="flex flex-wrap justify-center mb-4">
+                        <div class="survey-option" data-mood="0">😞 Rất tệ</div>
+                        <div class="survey-option" data-mood="1">😔 Tệ</div>
+                        <div class="survey-option" data-mood="2">😐 Bình thường</div>
+                        <div class="survey-option" data-mood="3">😊 Tốt</div>
+                        <div class="survey-option" data-mood="4">😄 Tuyệt vời</div>
+                    </div>
+                    <p>Mức độ lo lắng của bạn?</p>
+                    <input type="range" min="0" max="10" value="5" class="emotion-slider mb-4">
+                    <p>Bạn có gặp khó khăn gì gần đây không?</p>
+                    <textarea class="w-full p-2 border rounded-md mb-4" rows="4" placeholder="Chia sẻ thêm..."></textarea>
+                    <div class="mb-4">
+                        <p>Bạn có muốn nhận hỗ trợ từ chuyên gia không?</p>
+                        <div class="flex space-x-4">
+                            <div class="survey-option" data-specialist="yes">Có</div>
+                            <div class="survey-option" data-specialist="no">Không</div>
+                        </div>
+                    </div>
+                    <button id="submit-survey" class="bg-indigo-500 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-full">
+                        Hoàn thành
+                    </button>
+                </div>
+            </section>
+            <section id="tasks" class="page" style="display: none;">
+                <h2 class="section-title">Nhiệm vụ của bạn hôm nay</h2>
+                <div class="card">
+                    <div class="task-card">
+                        <div class="task-info">
+                            <h3 class="text-lg font-semibold">Thiền 5 phút</h3>
+                            <p class="text-sm text-gray-500">Giúp giảm căng thẳng, cải thiện tập trung</p>
+                        </div>
+                        <button class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-full">Bắt đầu</button>
+                    </div>
+                    <div class="task-card">
+                        <div class="task-info">
+                            <h3 class="text-lg font-semibold">Hít thở sâu</h3>
+                            <p class="text-sm text-gray-500">Giảm lo âu, tăng cường thư giãn</p>
+                         </div>
+                        <button class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-full">Bắt đầu</button>
+                    </div>
+                    <div class="task-card">
+                        <div class="task-info">
+                            <h3 class="text-lg font-semibold">Viết nhật ký</h3>
+                            <p class="text-sm text-gray-500">Ghi lại cảm xúc, suy nghĩ mỗi ngày</p>
+                        </div>
+                        <button class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-full">Bắt đầu</button>
+                    </div>
+                </div>
+                 <div class="card">
+                    <h2 class="text-xl font-semibold mb-2">Tiến độ của bạn</h2>
+                    <div class="task-progress mb-4">
+                        <div id="my-progress-bar" style="width: 60%" class="task-progress-bar"></div>
+                    </div>
+                    <p class="text-sm text-gray-600">Bạn đã hoàn thành 3/5 nhiệm vụ hôm nay</p>
+                </div>
+                 <div class="mt-6">
+                    <h4 class="text-md font-semibold text-gray-700 mb-2">Nhiệm vụ gợi ý:</h4>
+                    <div class="flex space-x-4 overflow-x-auto">
+                        <div class="bg-white rounded-lg shadow-sm p-4 w-48 flex-shrink-0 border border-gray-200">
+                            <h5 class="text-md font-semibold text-gray-800 mb-2">Nghe Podcast</h5>
+                            <p class="text-sm text-gray-600">30 phút</p>
+                        </div>
+                        <div class="bg-white rounded-lg shadow-sm p-4 w-48 flex-shrink-0 border border-gray-200">
+                            <h5 class="text-md font-semibold text-gray-800 mb-2">Đọc sách</h5>
+                            <p class="text-sm text-gray-600">20 phút</p>
+                        </div>
+                         <div class="bg-white rounded-lg shadow-sm p-4 w-48 flex-shrink-0 border border-gray-200">
+                            <h5 class="text-md font-semibold text-gray-800 mb-2">Tập Yoga</h5>
+                            <p class="text-sm text-gray-600">25 phút</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <section id="chat" class="page" style="display: none;">
+                <h2 class="section-title">Chat với AI</h2>
+                <div id="chat-log" class="mb-4 overflow-y-auto" style="max-height: 300px;">
+                    {/* Các tin nhắn chat sẽ hiển thị ở đây */}
+                </div>
+                <div class="input-container">
+                    <input type="text" id="chat-input" placeholder="Nhập tin nhắn..." class="text-input">
+                    <button id="send-button" class="send-button">Gửi</button>
+                </div>
+            </section>
+            <section id="specialist" class="page" style="display: none;">
+                <h2 class="section-title">Chuyên gia tâm lý</h2>
+                <div class="specialist-card">
+                    <img src="https://via.placeholder.com/80" alt="Chuyên gia 1" class="specialist-image">
+                    <div class="specialist-info">
+                        <h3 class="specialist-name">ThS. Nguyễn Thị Ánh</h3>
+                        <p class="specialist-expertise">Chuyên gia trị liệu tâm lý</p>
+                        <div class="rating">
+                            <i class="material-icons">star</i>
+                            <i class="material-icons">star</i>
+                            <i class="material-icons">star</i>
+                            <i class="material-icons">star</i>
+                            <i class="material-icons">star_half</i>
+                        </div>
+                        <p class="text-sm text-gray-600">Kinh nghiệm: 10 năm</p>
+                    </div>
+                    <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full">Đặt lịch hẹn</button>
+                </div>
+                <div class="specialist-card">
+                    <img src="https://via.placeholder.com/80" alt="Chuyên gia 2" class="specialist-image">
+                    <div class="specialist-info">
+                        <h3 class="specialist-name">TS. Lê Văn Bình</h3>
+                        <p class="specialist-expertise">Chuyên gia tư vấn</p>
+                        <div class="rating">
+                            <i class="material-icons">star</i>
+                            <i class="material-icons">star</i>
+                            <i class="material-icons">star</i>
+                            <i class="material-icons">star</i>
+                            <i class="material-icons">star</i>
+                        </div>
+                        <p class="text-sm text-gray-600">Kinh nghiệm: 15 năm</p>
+                    </div>
+                    <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full">Đặt lịch hẹn</button>
+                </div>
+                <div class="specialist-card">
+                    <img src="https://via.placeholder.com/80" alt="Chuyên gia 3" class="specialist-image">
+                    <div class="specialist-info">
+                        <h3 class="specialist-name">ThS. Trần Thu Hà</h3>
+                        <p class="specialist-expertise">Chuyên gia trị liệu</p>
+                        <div class="rating">
+                            <i class="material-icons">star</i>
+                            <i class="material-icons">star</i>
+                            <i class="material-icons">star</i>
+                            <i class="material-icons">star_half</i>
+                        </div>
+                        <p class="text-sm text-gray-600">Kinh nghiệm: 8 năm</p>
+                    </div>
+                    <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full">Đặt lịch hẹn</button>
+                </div>
+            </section>
+            <section id="profile" class="page" style="display: none;">
+                <div class="profile-header">
+                    <img src="https://via.placeholder.com/80" alt="Ảnh đại diện" class="profile-avatar">
+                    <div class="profile-info">
+                        <h2>[Tên người dùng]</h2>
+                        <p>Email: [Email người dùng]</p>
+                    </div>
+                     <button class="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded-full edit-profile-button">
+                        <i class="material-icons mr-2">edit</i> Chỉnh sửa
+                    </button>
+                </div>
+                <h2 class="section-title">Lịch sử hoạt động</h2>
+                <div class="history-item">
+                    <span>Hoàn thành khảo sát</span>
+                    <span>10/07/2024</span>
+                </div>
+                <div class="history-item">
+                    <span>Thiền 10 phút</span>
+                    <span>09/07/2024</span>
+                </div>
+                <div class="history-item">
+                    <span>Chat với chuyên gia</span>
+                    <span>08/07/2024</span>
+                </div>
+            </section>
+        </main>
+        <nav class="bottom-nav">
+            <a href="#home" class="nav-item active" data-target="home">
+                <i class="material-icons">home</i>
+                <span>Trang chủ</span>
+            </a>
+            <a href="#tasks" class="nav-item" data-target="tasks">
+                <i class="material-icons">check_circle</i>
+                <span>Nhiệm vụ</span>
+            </a>
+            <a href="#chat" class="nav-item" data-target="chat">
+                <i class="material-icons">chat_bubble</i>
+                <span>Chat AI</span>
+            </a>
+            <a href="#specialist" class="nav-item" data-target="specialist">
+                <i class="material-icons">psychology</i>
+                <span>Chuyên gia</span>
+            </a>
+            <a href="#profile" class="nav-item" data-target="profile">
+                <i class="material-icons">person</i>
+                <span>Hồ sơ</span>
+            </a>
+        </nav>
+    </div>
+    <script>
+        const homeBtn = document.getElementById("start-survey");
+        const surveyPage = document.getElementById("survey");
+        const homePage = document.getElementById("home");
+        const submitSurveyBtn = document.getElementById("submit-survey");
+        const taskPage = document.getElementById("tasks");
+        const chatPage = document.getElementById("chat");
+        const profilePage = document.getElementById("profile");
+        const chatInput = document.getElementById("chat-input");
+        const sendButton = document.getElementById("send-button");
+        const chatLog = document.getElementById("chat-log");
+        const specialistPage = document.getElementById("specialist");
+        const menuButton = document.getElementById("menu-button");
+
+
+        let surveyDone = false;
+        let username = "Bạn";
+
+        homeBtn.addEventListener("click", () => {
+            homePage.style.display = "none";
+            surveyPage.style.display = "block";
+        });
+
+        submitSurveyBtn.addEventListener("click", () => {
+            surveyDone = true;
+            homePage.style.display = "block";
+            surveyPage.style.display = "none";
+            alert("Cảm ơn bạn đã hoàn thành khảo sát!");
+        });
+
+        sendButton.addEventListener("click", () => {
+            const message = chatInput.value;
+            if (message.trim() !== "") {
+                displayMessage(message, "user");
+                chatInput.value = "";
+                setTimeout(() => {
+                    const reply = generateAIResponse(message);
+                    displayMessage(reply, "ai");
+                }, 1000);
+            }
+        });
+
+        function displayMessage(message, sender) {
+            const messageDiv = document.createElement("div");
+            messageDiv.classList.add("chat-message", sender);
+            messageDiv.textContent = message;
+            chatLog.appendChild(messageDiv);
+            chatLog.scrollTop = chatLog.scrollHeight;
+        }
+
+        function generateAIResponse(message) {
+            message = message.toLowerCase();
+            if (message.includes("xin chào") || message.includes("chào")) {
+                return "Chào bạn, tôi có thể giúp gì cho bạn?";
+            } else if (message.includes("khỏe không")) {
+                return "Tôi là AI, tôi không có cảm xúc nhưng tôi luôn sẵn sàng hỗ trợ bạn!";
+            } else if (message.includes("căng thẳng")) {
+                return "Tôi hiểu bạn đang căng thẳng. Hãy thử bài tập thở 4-7-8 để giảm căng thẳng nhé!";
+            } else if (message.includes("lo lắng")) {
+                return "Lo lắng là một cảm xúc tự nhiên. Bạn có thể chia sẻ thêm về điều gì khiến bạn lo lắng không?";
+            } else if (message.includes("tư vấn")) {
+                return "Tôi có thể cung cấp một số lời khuyên chung, nhưng để được tư vấn chuyên sâu, bạn có thể đặt lịch hẹn với chuyên gia tâm lý.";
+            } else {
+                return "Tôi rất tiếc, tôi chưa hiểu câu hỏi của bạn. Bạn có thể hỏi lại được không?";
+            }
+        }
+
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', function() {
+                document.querySelectorAll('.nav-item').forEach(navItem => {
+                    navItem.classList.remove('active');
+                });
+                this.classList.add('active');
+                const targetId = this.getAttribute('data-target');
+                document.querySelectorAll('.page').forEach(page => {
+                    page.style.display = 'none';
+                });
+                document.getElementById(targetId).style.display = 'block';
+            });
+        });
+
+        document.querySelector('.nav-item[data-target="home"]').click();
+
+    </script>
+</body>
+</html>
