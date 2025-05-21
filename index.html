@@ -1,472 +1,275 @@
 <!DOCTYPE html>
-
 <html lang="vi">
 <head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>Tamlya - Take care of your mind</title>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<style>
-    :root {
-      --orange: #f57c00;
-      --light-orange: #f9a825;
-      --green: #2e7d32;
-      --bg: #fff8e1;
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PeaceFlow - Ứng dụng quản lý lo âu và trầm cảm</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+  <style>
+    .fade {
+      transition: opacity 0.3s ease-in-out;
     }
-
-    body {
-      margin: 0;
-      font-family: "Arial Rounded MT", sans-serif;
-      background: var(--bg);
-      color: #333;
+    section.hidden.fade {
+      opacity: 0;
     }
-
-    header {
-      background: var(--orange);
-      padding: 1rem;
-      color: white;
-      text-align: center;
-      font-size: 1.5rem;
+    section.fade {
+      opacity: 1;
     }
-
-    nav {
-      position: fixed;
-      bottom: 0;
-      width: 100%;
-      background: var(--light-orange);
-      display: flex;
-      justify-content: space-around;
-      padding: 0.5rem;
-    }
-
-    nav button {
-      background: none;
-      border: none;
-      font-size: 1.2rem;
-      color: white;
-    }
-
-    .screen {
-      display: none;
-      padding: 1rem;
-    }
-
-    .active {
-      display: block;
-    }
-
-    .card {
-      background: white;
-      padding: 1rem;
-      margin-bottom: 1rem;
-      border-radius: 12px;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-    }
-
-    input[type="text"],
-    input[type="date"],
-    input[type="time"],
-    select {
-      width: 100%;
-      padding: 0.5rem;
-      margin-bottom: 0.75rem;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-    }
-
-    canvas {
-      width: 100% !important;
-      height: auto !important;
-    }
-
-    @media (min-width: 768px) {
-      body {
-        max-width: 450px;
-        margin: auto;
-        border: 1px solid #ddd;
-        border-radius: 8px;
-        overflow: hidden;
-      }
-    }
-  
-#chatPopup {
-  font-family: 'Segoe UI', sans-serif;
-  background: #fefefe;
-  border: 1px solid #ddd;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-}
-
-.chat-header {
-  font-size: 1rem;
-  font-weight: 600;
-  background: #f57c00;
-  padding: 10px;
-  border-bottom: 1px solid #ddd;
-}
-
-.chat-messages {
-  max-height: 250px;
-  overflow-y: auto;
-  padding: 10px;
-  font-size: 0.95rem;
-  background: #fafafa;
-}
-
-.chat-messages div {
-  margin-bottom: 8px;
-}
-
-.chat-messages .user {
-  text-align: right;
-  color: #444;
-}
-
-.chat-messages .ai {
-  text-align: left;
-  color: #2e7d32;
-  background: #e8f5e9;
-  padding: 6px;
-  border-radius: 8px;
-  display: inline-block;
-  max-width: 85%;
-}
-
-.chat-input input {
-  border-right: none;
-  border-top-left-radius: 8px;
-  border-bottom-left-radius: 8px;
-}
-
-.chat-input button {
-  border-top-right-radius: 8px;
-  border-bottom-right-radius: 8px;
-}
-</style>
-<style>
-#chatButton {
-  position: fixed;
-  bottom: 50px;
-  right: 20px;
-  background-color: #2e7d32;
-  color: white;
-  border: none;
-  border-radius: 50%;
-  padding: 16px;
-  font-size: 20px;
-  cursor: pointer;
-  z-index: 999;
-}
-
-#chatPopup {
-  position: fixed;
-  bottom: 80px;
-  right: 20px;
-  width: 320px;
-  max-height: 400px;
-  background: #fff;
-  border: 1px solid #ccc;
-  border-radius: 10px;
-  display: none;
-  flex-direction: column;
-  overflow: hidden;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-  z-index: 998;
-}
-
-#chatPopup .chat-header {
-  background-color: #f57c00;
-  color: white;
-  padding: 10px;
-  font-weight: bold;
-}
-
-#chatPopup .chat-messages {
-  flex: 1;
-  padding: 10px;
-  overflow-y: auto;
-  font-size: 0.9rem;
-}
-
-#chatPopup .chat-input {
-  display: flex;
-  border-top: 1px solid #ccc;
-}
-
-#chatPopup .chat-input input {
-  flex: 1;
-  padding: 10px;
-  border: none;
-  outline: none;
-}
-
-#chatPopup .chat-input button {
-  background: var(--green);
-  color: white;
-  border: none;
-  padding: 10px;
-  cursor: pointer;
-}
-</style><link href="manifest.json" rel="manifest"/>
-<meta content="#f57c00" name="theme-color"/>
-<link href="icon-192.png" rel="apple-touch-icon"/>
+  </style>
 </head>
-<body>
-<header>Tamlya 🌿</header><img alt="Tamlya Logo" src="tamlya-logo.png" style="width: 160px; display: block; margin: 1rem auto;"/>
-<div class="screen active" id="home">
-<div class="card">
-<h4>Trạng thái hôm nay</h4>
-<canvas id="moodChart"></canvas>
-</div>
-<div class="card">
-<h4>Gợi ý từ AI</h4>
-<input id="userMessage" placeholder="Bạn đang cảm thấy thế nào?" type="text"/>
-<button onclick="sendMessage()" style="margin-top: 0.5rem;">Gửi</button>
-<p id="aiResponse"></p>
-</div>
-</div>
-<div class="screen" id="survey">
-<div class="card">
-<h4>Khảo sát tâm trạng</h4>
-<label>Hôm nay bạn thấy thế nào?</label>
-<select>
-<option>Vui vẻ</option>
-<option>Bình thường</option>
-<option>Buồn</option>
-<option>Lo lắng</option>
-</select>
-<label>Mức độ lo lắng (0-10):</label>
-<input max="10" min="0" type="range"/>
-<label>Đã ngủ ngon không?</label>
-<select><option>Có</option><option>Không</option></select>
-<label>Khó tập trung?</label>
-<select><option>Không</option><option>Có</option></select>
-<label>Cảm thấy bị cô lập?</label>
-<select><option>Không</option><option>Có</option></select>
-</div>
-</div>
-<div class="screen" id="tasks">
-<div class="card">
-<h4>Nhiệm vụ cải thiện tinh thần</h4>
-<label><input type="checkbox"/> Ngồi thiền 5 phút</label><br/>
-<label><input type="checkbox"/> Viết nhật ký cảm xúc</label><br/>
-<label><input type="checkbox"/> Bài tập thở sâu</label><br/>
-<label><input type="checkbox"/> Đi bộ 15 phút</label><br/>
-<label><input type="checkbox"/> Uống đủ nước</label>
-</div>
-</div>
-<div class="screen" id="booking">
-<div class="card">
-<h4>Đặt lịch với chuyên gia</h4>
-<label>Chuyên gia:</label>
-<select>
-<option>BS. An Tâm</option>
-<option>TS. Bình Yên</option>
-</select>
-<label>Ngày:</label>
-<input type="date"/>
-<label>Giờ:</label>
-<input type="time"/>
-<button style="background: var(--green); color: white; padding: 0.5rem; border-radius: 8px; border: none;">Đặt lịch</button>
-</div>
-</div>
-<nav>
-<button onclick="showScreen('home')">🏠</button>
-<button onclick="showScreen('survey')">📋</button>
-<button onclick="showScreen('tasks')">✅</button>
-<button onclick="showScreen('booking')">📅</button>
-</nav>
-<script>
-    const screens = document.querySelectorAll(".screen");
+<body class="bg-[#c6e6e8] text-gray-800">
+  <header>
+    <img src="images/peaceflow-logo-01.png" alt="PeaceFlow Logo" class="logo">
+  </header>
 
-    function showScreen(id) {
-      screens.forEach(s => s.classList.remove("active"));
-      document.getElementById(id).classList.add("active");
-    }
+  <main>
+    <!-- Mood Tracker Tab -->
+    <section id="mood" class="fade">
+      <h2>Theo dõi tâm trạng</h2>
+      <p>Xem lại mức độ stress và lo âu hàng ngày.</p>
+      <canvas id="moodChart"></canvas>
+      <form class="mt-4">
+        <label>Stress hôm nay:</label>
+        <input type="range" min="0" max="10" value="5">
+        <label>Lo âu hôm nay:</label>
+        <input type="range" min="0" max="10" value="4">
+        <button type="submit">Lưu</button>
+      </form>
+      <button onclick="openAssessment()" class="mt-4">Bắt đầu đánh giá sức khỏe tâm thần</button>
+      <ul class="mt-4">
+        <li class="expert-item">
+          <span>15/5</span>
+          <span>Stress: 6 - Lo âu: 5</span>
+          <button onclick="alert('Xem chi tiết ngày 15/5')">Chi tiết</button>
+        </li>
+      </ul>
+    </section>
 
-    // Chart.js setup
-    const ctx = document.getElementById("moodChart").getContext("2d");
-    const moodChart = new Chart(ctx, {
-      type: "line",
-      data: {
-        labels: ["T2", "T3", "T4", "T5", "T6", "T7", "CN"],
-        datasets: [{
-          label: "Tâm trạng",
-          data: [6, 5, 7, 4, 6, 8, 7],
-          fill: true,
-          backgroundColor: "rgba(245, 124, 0, 0.2)",
-          borderColor: "rgba(245, 124, 0, 1)",
-          tension: 0.4
-        }]
-      },
-      options: {
-        responsive: true,
-        scales: {
-          y: { min: 0, max: 10 }
-        }
-      }
-    });
+    <!-- AI Chat Tab -->
+    <section id="chat" class="hidden fade">
+      <h2>Trò chuyện với AI</h2>
+      <div id="chatBox"></div>
+      <div class="chat-input">
+        <input type="text" id="userInput" placeholder="Nhập tin nhắn...">
+        <button onclick="sendMessage()">Gửi</button>
+      </div>
+    </section>
 
-    // OpenAI API chat
-    async function sendMessage() {
-    const input = document.getElementById('userMessage');
-    const message = input.value.trim();
-    if (!message) return;
+    <!-- Meditation Tab -->
+    <section id="meditation" class="hidden fade">
+      <h2>Thiền định</h2>
+      <p>Hướng dẫn thiền cá nhân hóa giúp bạn thư giãn.</p>
+      
+      <div class="meditation-card">
+        <h3>Thiền cơ bản - 5 phút</h3>
+        <p>Hãy tìm một nơi yên tĩnh và bắt đầu bài thiền 5 phút với âm thanh nhẹ nhàng.</p>
+        <audio controls>
+          <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+          Trình duyệt không hỗ trợ âm thanh.
+        </audio>
+        <p class="text-sm text-gray-500 italic">Lưu ý: Bạn có thể đeo tai nghe để đạt hiệu quả thư giãn tốt hơn.</p>
+      </div>
 
-    const responseDiv = document.getElementById('aiResponse');
-    responseDiv.innerText = "🌱 Tamlya đang suy nghĩ...";
+      <div class="meditation-card">
+        <h3>Thiền hơi thở - 10 phút</h3>
+        <p>Bài tập tập trung vào hơi thở, giúp bạn thả lỏng cơ thể và tâm trí.</p>
+        <audio controls>
+          <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3" type="audio/mpeg">
+          Trình duyệt không hỗ trợ âm thanh.
+        </audio>
+        <p class="text-sm text-gray-500 italic">Hướng dẫn: Hít vào 4 giây, giữ 4 giây, thở ra 4 giây.</p>
+      </div>
 
-    try {
-      const apiKey = "AIzaSyDcJkasW6SuUu5xxY_2IfkIn1_4kLkoyCI";
+      <div class="meditation-card">
+        <h3>Thiền chánh niệm - 15 phút</h3>
+        <p>Thực hành chánh niệm để giảm stress và lo âu.</p>
+        <audio controls>
+          <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3" type="audio/mpeg">
+          Trình duyệt không hỗ trợ âm thanh.
+        </audio>
+        <p class="text-sm text-gray-500 italic">Tập trung vào cảm giác hiện tại, không phán xét.</p>
+      </div>
 
-      const res = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({
-            contents: [
-              {
-                role: "user",
-                parts: [{ text: message }]
-              }
-            ]
-          })
-        }
-      );
+      <div class="meditation-card">
+        <h3>Thiền yêu thương - 10 phút</h3>
+        <p>Phát triển lòng từ bi và yêu thương bản thân.</p>
+        <audio controls>
+          <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3" type="audio/mpeg">
+          Trình duyệt không hỗ trợ âm thanh.
+        </audio>
+        <p class="text-sm text-gray-500 italic">Gửi những lời chúc tốt đẹp đến bản thân và người khác.</p>
+      </div>
+    </section>
 
-      const data = await res.json();
-      const reply = data?.candidates?.[0]?.content?.parts?.[0]?.text || "Không có phản hồi.";
+    <!-- Expert Tab -->
+    <section id="expert" class="hidden fade">
+      <h2>Kết nối chuyên gia</h2>
+      <p>Đặt lịch với chuyên gia trị liệu đáng tin cậy.</p>
+      <ul class="expert-list">
+        <li class="expert-item">
+          <div class="expert-info">
+            <p class="expert-name">TS. Lan Nguyễn</p>
+            <p class="expert-specialty">Chuyên gia trị liệu tâm lý – 15 năm kinh nghiệm</p>
+          </div>
+          <button onclick="openAppointmentModal('TS. Lan Nguyễn')">Đặt lịch</button>
+        </li>
+        <li class="expert-item">
+          <div class="expert-info">
+            <p class="expert-name">ThS. An Trần</p>
+            <p class="expert-specialty">Chuyên gia hỗ trợ trẻ em & gia đình</p>
+          </div>
+          <button onclick="openAppointmentModal('ThS. An Trần')">Đặt lịch</button>
+        </li>
+      </ul>
+    </section>
 
-      responseDiv.innerText = `🌱 Tamlya: ${reply}`;
-      input.value = "";
-    } catch (err) {
-      responseDiv.innerText = "❌ Lỗi khi gọi Gemini API.";
-      console.error(err);
-    }
-  }
-  </script>
-<button id="chatButton">💬</button>
-<div id="chatPopup">
-<div class="chat-header">Tamlya AI Chat</div>
-<div class="chat-messages" id="chatMessages"></div>
-<div class="chat-input">
-<input id="popupMessage" placeholder="Nhập nội dung..." type="text"/>
-<button onclick="sendPopupMessage()">Gửi</button>
-</div>
-</div>
-<script>
-document.getElementById("chatButton").onclick = function() {
-  const popup = document.getElementById("chatPopup");
-  popup.style.display = popup.style.display === "flex" ? "none" : "flex";
-};
+    <!-- Assessment Modal -->
+    <div id="assessmentModal" class="modal hidden">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3>Đánh giá sức khỏe tâm thần</h3>
+          <p>Hãy trả lời các câu hỏi sau để chúng tôi có thể hỗ trợ bạn tốt hơn</p>
+        </div>
+        <form onsubmit="submitAssessment(event)">
+          <div class="form-group">
+            <label>1. Bạn có cảm thấy buồn hoặc chán nản gần đây không?</label>
+            <div class="assessment-options">
+              <label class="assessment-option">
+                <input type="radio" name="q1" value="no" required>
+                <span>Không</span>
+              </label>
+              <label class="assessment-option">
+                <input type="radio" name="q1" value="sometimes">
+                <span>Thỉnh thoảng</span>
+              </label>
+              <label class="assessment-option">
+                <input type="radio" name="q1" value="often">
+                <span>Thường xuyên</span>
+              </label>
+            </div>
+          </div>
 
-async function sendPopupMessage() {
-  const input = document.getElementById('popupMessage');
-  const msg = input.value.trim();
-  if (!msg) return;
+          <div class="form-group">
+            <label>2. Bạn có gặp khó khăn trong giấc ngủ không?</label>
+            <div class="assessment-options">
+              <label class="assessment-option">
+                <input type="radio" name="q2" value="no" required>
+                <span>Không</span>
+              </label>
+              <label class="assessment-option">
+                <input type="radio" name="q2" value="sometimes">
+                <span>Thỉnh thoảng</span>
+              </label>
+              <label class="assessment-option">
+                <input type="radio" name="q2" value="often">
+                <span>Thường xuyên</span>
+              </label>
+            </div>
+          </div>
 
-  const chatMessages = document.getElementById('chatMessages');
-  chatMessages.innerHTML += `<div><strong>Bạn:</strong> ${msg}</div>`;
+          <div class="form-group">
+            <label>3. Bạn có thấy lo âu hoặc bồn chồn không?</label>
+            <div class="assessment-options">
+              <label class="assessment-option">
+                <input type="radio" name="q3" value="no" required>
+                <span>Không</span>
+              </label>
+              <label class="assessment-option">
+                <input type="radio" name="q3" value="sometimes">
+                <span>Thỉnh thoảng</span>
+              </label>
+              <label class="assessment-option">
+                <input type="radio" name="q3" value="often">
+                <span>Thường xuyên</span>
+              </label>
+            </div>
+          </div>
 
-  input.value = "";
+          <div class="modal-footer">
+            <button type="button" onclick="closeAssessment()">Hủy</button>
+            <button type="submit">Gửi đánh giá</button>
+          </div>
+        </form>
+      </div>
+    </div>
 
-  try {
-    const apiKey = "AIzaSyDcJkasW6SuUu5xxY_2IfkIn1_4kLkoyCI";
-    const res = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`,
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          contents: [
-            { role: "user", parts: [{ text: msg }] }
-          ]
-        })
-      }
-    );
+    <!-- Appointment Modal -->
+    <div id="appointmentModal" class="modal hidden">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3>Đặt lịch hẹn</h3>
+          <p id="expertName" class="text-subtle"></p>
+        </div>
+        <form onsubmit="submitAppointment(event)">
+          <div class="form-group">
+            <label>Chọn ngày:</label>
+            <input type="date" id="appointmentDate" required min="">
+          </div>
+          
+          <div class="form-group">
+            <label>Chọn giờ:</label>
+            <div class="appointment-time-slots">
+              <div class="time-slot" onclick="selectTimeSlot(this, '09:00')">09:00</div>
+              <div class="time-slot" onclick="selectTimeSlot(this, '10:00')">10:00</div>
+              <div class="time-slot" onclick="selectTimeSlot(this, '11:00')">11:00</div>
+              <div class="time-slot" onclick="selectTimeSlot(this, '14:00')">14:00</div>
+              <div class="time-slot" onclick="selectTimeSlot(this, '15:00')">15:00</div>
+              <div class="time-slot" onclick="selectTimeSlot(this, '16:00')">16:00</div>
+            </div>
+            <input type="hidden" id="appointmentTime" required>
+          </div>
 
-    const data = await res.json();
-    const reply = data?.candidates?.[0]?.content?.parts?.[0]?.text || "Không có phản hồi.";
-    chatMessages.innerHTML += `<div><strong>Tamlya:</strong> ${reply}</div>`;
-    chatMessages.scrollTop = chatMessages.scrollHeight;
-  } catch (e) {
-    chatMessages.innerHTML += `<div><em>Lỗi khi gọi Gemini API</em></div>`;
-  }
-}
+          <div class="form-group">
+            <label>Ghi chú (nếu có):</label>
+            <textarea id="appointmentNote" rows="3" placeholder="Nhập ghi chú của bạn..."></textarea>
+          </div>
 
-// Load chat history from localStorage
-window.addEventListener('DOMContentLoaded', () => {
-  const messages = JSON.parse(localStorage.getItem('chatHistory')) || [];
-  const chatMessages = document.getElementById('chatMessages');
-  messages.forEach(msg => {
-    const role = msg.role === 'user' ? 'user' : 'ai';
-    const content = msg.content;
-    const div = document.createElement('div');
-    div.className = role === 'user' ? 'user' : 'ai';
-    div.innerHTML = (role === 'user') ? `<strong>Bạn:</strong> ${content}` : `<strong>Tamlya:</strong> ${content}`;
-    chatMessages.appendChild(div);
-  });
-  chatMessages.scrollTop = chatMessages.scrollHeight;
-});
+          <div class="modal-footer">
+            <button type="button" onclick="closeAppointmentModal()">Hủy</button>
+            <button type="submit">Xác nhận đặt lịch</button>
+          </div>
+        </form>
+      </div>
+    </div>
 
-async function sendPopupMessage() {
-  const input = document.getElementById('popupMessage');
-  const msg = input.value.trim();
-  if (!msg) return;
+    <!-- Profile Tab -->
+    <section id="profile" class="hidden fade">
+      <h2>Hồ sơ cá nhân</h2>
+      <div class="profile-card">
+        <p><strong>Họ tên:</strong> Nguyễn Văn A</p>
+        <p><strong>Email:</strong> example@email.com</p>
+        <p><strong>Ngôn ngữ:</strong> Tiếng Việt</p>
+      </div>
+    </section>
+  </main>
 
-  const chatMessages = document.getElementById('chatMessages');
-  const userDiv = document.createElement('div');
-  userDiv.className = 'user';
-  userDiv.innerHTML = `<strong>Bạn:</strong> ${msg}`;
-  chatMessages.appendChild(userDiv);
+  <!-- Bottom Navigation -->
+  <nav id="tabBar">
+    <button onclick="showScreen('mood', this)" class="tab-btn active">
+      <i class="fas fa-heart"></i>
+      <span>Tâm trạng</span>
+    </button>
+    <button onclick="showScreen('chat', this)" class="tab-btn">
+      <i class="fas fa-comments"></i>
+      <span>AI Chat</span>
+    </button>
+    <button onclick="showScreen('meditation', this)" class="tab-btn">
+      <i class="fas fa-spa"></i>
+      <span>Thiền</span>
+    </button>
+    <button onclick="showScreen('expert', this)" class="tab-btn">
+      <i class="fas fa-user-md"></i>
+      <span>Chuyên gia</span>
+    </button>
+    <button onclick="showScreen('profile', this)" class="tab-btn">
+      <i class="fas fa-user"></i>
+      <span>Hồ sơ</span>
+    </button>
+  </nav>
 
-  input.value = "";
-  chatMessages.scrollTop = chatMessages.scrollHeight;
-
-  const chatHistory = JSON.parse(localStorage.getItem('chatHistory')) || [];
-  chatHistory.push({ role: 'user', content: msg });
-
-  try {
-    const apiKey = "AIzaSyDcJkasW6SuUu5xxY_2IfkIn1_4kLkoyCI";
-    const res = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`,
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          contents: [
-            { role: "user", parts: [{ text: msg }] }
-          ]
-        })
-      }
-    );
-
-    const data = await res.json();
-    const reply = data?.candidates?.[0]?.content?.parts?.[0]?.text || "Không có phản hồi.";
-    const aiDiv = document.createElement('div');
-    aiDiv.className = 'ai';
-    aiDiv.innerHTML = `<strong>Tamlya:</strong> ${reply}`;
-    chatMessages.appendChild(aiDiv);
-    chatMessages.scrollTop = chatMessages.scrollHeight;
-
-    chatHistory.push({ role: 'ai', content: reply });
-    localStorage.setItem('chatHistory', JSON.stringify(chatHistory));
-  } catch (e) {
-    const errorDiv = document.createElement('div');
-    errorDiv.className = 'ai';
-    errorDiv.innerHTML = `<em>Lỗi khi gọi Gemini API</em>`;
-    chatMessages.appendChild(errorDiv);
-  }
-}
-</script><script>
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('sw.js')
-      .then(reg => console.log("ServiceWorker registered:", reg))
-      .catch(err => console.log("ServiceWorker registration failed:", err));
-  });
-}
-</script></body>
+  <script src="js/main.js"></script>
+</body>
 </html>
