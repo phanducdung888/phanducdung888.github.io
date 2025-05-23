@@ -23,107 +23,576 @@
 <body class="bg-[#c6e6e8] text-gray-800">
   <header>
     <img src="images/peaceflow-logo-01.png" alt="PeaceFlow Logo" class="logo">
+    <h1 class="header-title hidden">PeaceFlow</h1>
   </header>
 
   <main>
     <!-- Mood Tracker Tab -->
     <section id="mood" class="fade">
-      <h2>Theo dõi tâm trạng</h2>
-      <p>Xem lại mức độ stress và lo âu hàng ngày.</p>
-      <canvas id="moodChart"></canvas>
-      <form class="mt-4">
-        <label>Stress hôm nay:</label>
-        <input type="range" min="0" max="10" value="5">
-        <label>Lo âu hôm nay:</label>
-        <input type="range" min="0" max="10" value="4">
-        <button type="submit">Lưu</button>
-      </form>
-      <button onclick="openAssessment()" class="mt-4">Bắt đầu đánh giá sức khỏe tâm thần</button>
-      <ul class="mt-4">
-        <li class="expert-item">
-          <span>15/5</span>
-          <span>Stress: 6 - Lo âu: 5</span>
-          <button onclick="alert('Xem chi tiết ngày 15/5')">Chi tiết</button>
-        </li>
-      </ul>
+      <div class="section-content">
+        <div class="mood-overview">
+          <div class="mood-card">
+            <div class="mood-card-header">
+              <h3>Tâm trạng hôm nay</h3>
+              <span class="date">15/05/2024</span>
+            </div>
+            <div class="mood-stats">
+              <div class="mood-stat">
+                <div class="stat-icon stress">
+                  <i class="fas fa-brain"></i>
+                </div>
+                <div class="stat-info">
+                  <label>Stress</label>
+                  <div class="stat-value">6/10</div>
+                </div>
+              </div>
+              <div class="mood-stat">
+                <div class="stat-icon anxiety">
+                  <i class="fas fa-heart"></i>
+                </div>
+                <div class="stat-info">
+                  <label>Lo âu</label>
+                  <div class="stat-value">5/10</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="mood-chart-container">
+            <div class="chart-header">
+              <h3>Theo dõi tâm trạng</h3>
+              <div class="chart-actions">
+                <button class="icon-button small">
+                  <i class="fas fa-calendar"></i>
+                </button>
+                <button class="icon-button small">
+                  <i class="fas fa-download"></i>
+                </button>
+              </div>
+            </div>
+            <canvas id="moodChart"></canvas>
+          </div>
+        </div>
+
+        <div class="mood-input-section">
+          <h3>Cập nhật tâm trạng</h3>
+          <form class="mood-form">
+            <div class="form-group">
+              <label>Stress hôm nay</label>
+              <div class="range-input">
+                <input type="range" min="0" max="10" value="5" id="stressInput">
+                <span class="range-value">5</span>
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Lo âu hôm nay</label>
+              <div class="range-input">
+                <input type="range" min="0" max="10" value="4" id="anxietyInput">
+                <span class="range-value">4</span>
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Ghi chú</label>
+              <textarea placeholder="Bạn cảm thấy thế nào hôm nay?"></textarea>
+            </div>
+            <button type="submit" class="primary">
+              <i class="fas fa-save"></i>
+              Lưu
+            </button>
+          </form>
+        </div>
+
+        <div class="assessment-section">
+          <div class="section-header">
+            <h3>Kết quả khảo sát</h3>
+            <button onclick="openAssessment()" class="secondary">
+              <i class="fas fa-plus"></i>
+              Khảo sát mới
+            </button>
+          </div>
+          
+          <div class="assessment-cards">
+            <div class="assessment-card">
+              <div class="assessment-header">
+                <div class="assessment-date">
+                  <i class="fas fa-calendar-alt"></i>
+                  <span>15/05/2024</span>
+                </div>
+                <div class="assessment-status completed">
+                  <i class="fas fa-check-circle"></i>
+                  <span>Hoàn thành</span>
+                </div>
+              </div>
+              <div class="assessment-results">
+                <div class="result-item">
+                  <label>Buồn/Chán nản</label>
+                  <div class="result-bar">
+                    <div class="bar-fill" style="width: 60%"></div>
+                  </div>
+                  <span class="result-value">Thường xuyên</span>
+                </div>
+                <div class="result-item">
+                  <label>Khó ngủ</label>
+                  <div class="result-bar">
+                    <div class="bar-fill" style="width: 40%"></div>
+                  </div>
+                  <span class="result-value">Thỉnh thoảng</span>
+                </div>
+                <div class="result-item">
+                  <label>Lo âu</label>
+                  <div class="result-bar">
+                    <div class="bar-fill" style="width: 80%"></div>
+                  </div>
+                  <span class="result-value">Thường xuyên</span>
+                </div>
+              </div>
+              <div class="assessment-actions">
+                <button class="secondary small">
+                  <i class="fas fa-eye"></i>
+                  Xem chi tiết
+                </button>
+                <button class="secondary small">
+                  <i class="fas fa-share-alt"></i>
+                  Chia sẻ
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="mood-history">
+          <h3>Lịch sử tâm trạng</h3>
+          <div class="history-list">
+            <div class="history-item">
+              <div class="history-date">
+                <span class="day">15</span>
+                <span class="month">Tháng 5</span>
+              </div>
+              <div class="history-content">
+                <div class="history-stats">
+                  <span class="stat stress">Stress: 6</span>
+                  <span class="stat anxiety">Lo âu: 5</span>
+                </div>
+                <p class="history-note">Cảm thấy căng thẳng do deadline công việc.</p>
+              </div>
+              <button class="icon-button">
+                <i class="fas fa-chevron-right"></i>
+              </button>
+            </div>
+            <div class="history-item">
+              <div class="history-date">
+                <span class="day">14</span>
+                <span class="month">Tháng 5</span>
+              </div>
+              <div class="history-content">
+                <div class="history-stats">
+                  <span class="stat stress">Stress: 5</span>
+                  <span class="stat anxiety">Lo âu: 4</span>
+                </div>
+                <p class="history-note">Tâm trạng ổn định, đã tập thiền 10 phút.</p>
+              </div>
+              <button class="icon-button">
+                <i class="fas fa-chevron-right"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
     </section>
 
     <!-- AI Chat Tab -->
     <section id="chat" class="hidden fade">
-      <h2>Trò chuyện với AI</h2>
-      <div id="chatBox"></div>
-      <div class="chat-input">
-        <input type="text" id="userInput" placeholder="Nhập tin nhắn...">
-        <button onclick="sendMessage()">Gửi</button>
+      <div class="section-content">
+        <div id="chatContainer">
+          <div id="chatBox"></div>
+          <div id="chatInput">
+            <div class="input-container">
+              <textarea id="userInput" placeholder="Nhập tin nhắn của bạn..." rows="1"></textarea>
+              <button class="send-button" onclick="sendMessage()">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="22" y1="2" x2="11" y2="13"></line>
+                  <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
 
     <!-- Meditation Tab -->
     <section id="meditation" class="hidden fade">
-      <h2>Thiền định</h2>
-      <p>Hướng dẫn thiền cá nhân hóa giúp bạn thư giãn.</p>
-      
-      <div class="meditation-card">
-        <h3>Thiền cơ bản - 5 phút</h3>
-        <p>Hãy tìm một nơi yên tĩnh và bắt đầu bài thiền 5 phút với âm thanh nhẹ nhàng.</p>
-        <audio controls>
-          <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
-          Trình duyệt không hỗ trợ âm thanh.
-        </audio>
-        <p class="text-sm text-gray-500 italic">Lưu ý: Bạn có thể đeo tai nghe để đạt hiệu quả thư giãn tốt hơn.</p>
-      </div>
+      <div class="section-content">
+        <div class="meditation-header">
+          <h2>Thiền định</h2>
+          <p>Khám phá các bài thiền được thiết kế riêng cho bạn</p>
+        </div>
 
-      <div class="meditation-card">
-        <h3>Thiền hơi thở - 10 phút</h3>
-        <p>Bài tập tập trung vào hơi thở, giúp bạn thả lỏng cơ thể và tâm trí.</p>
-        <audio controls>
-          <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3" type="audio/mpeg">
-          Trình duyệt không hỗ trợ âm thanh.
-        </audio>
-        <p class="text-sm text-gray-500 italic">Hướng dẫn: Hít vào 4 giây, giữ 4 giây, thở ra 4 giây.</p>
-      </div>
+        <div class="meditation-categories">
+          <button class="category-btn active">
+            <i class="fas fa-spa"></i>
+            Tất cả
+          </button>
+          <button class="category-btn">
+            <i class="fas fa-brain"></i>
+            Giảm stress
+          </button>
+          <button class="category-btn">
+            <i class="fas fa-moon"></i>
+            Ngủ ngon
+          </button>
+          <button class="category-btn">
+            <i class="fas fa-heart"></i>
+            Tập trung
+          </button>
+        </div>
 
-      <div class="meditation-card">
-        <h3>Thiền chánh niệm - 15 phút</h3>
-        <p>Thực hành chánh niệm để giảm stress và lo âu.</p>
-        <audio controls>
-          <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3" type="audio/mpeg">
-          Trình duyệt không hỗ trợ âm thanh.
-        </audio>
-        <p class="text-sm text-gray-500 italic">Tập trung vào cảm giác hiện tại, không phán xét.</p>
-      </div>
+        <div class="meditation-grid">
+          <div class="meditation-card featured">
+            <div class="meditation-image">
+              <img src="images/meditation-1.jpg" alt="Thiền cơ bản">
+              <span class="duration">5 phút</span>
+            </div>
+            <div class="meditation-content">
+              <h3>Thiền cơ bản - 5 phút</h3>
+              <p>Hãy tìm một nơi yên tĩnh và bắt đầu bài thiền 5 phút với âm thanh nhẹ nhàng.</p>
+              <div class="meditation-stats">
+                <span><i class="fas fa-play-circle"></i> 1.2k lượt nghe</span>
+                <span><i class="fas fa-heart"></i> 98% hài lòng</span>
+              </div>
+              <audio controls>
+                <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+                Trình duyệt không hỗ trợ âm thanh.
+              </audio>
+              <p class="meditation-note">Lưu ý: Bạn có thể đeo tai nghe để đạt hiệu quả thư giãn tốt hơn.</p>
+            </div>
+          </div>
 
-      <div class="meditation-card">
-        <h3>Thiền yêu thương - 10 phút</h3>
-        <p>Phát triển lòng từ bi và yêu thương bản thân.</p>
-        <audio controls>
-          <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3" type="audio/mpeg">
-          Trình duyệt không hỗ trợ âm thanh.
-        </audio>
-        <p class="text-sm text-gray-500 italic">Gửi những lời chúc tốt đẹp đến bản thân và người khác.</p>
+          <div class="meditation-card">
+            <div class="meditation-image">
+              <img src="images/meditation-2.jpg" alt="Thiền hơi thở">
+              <span class="duration">10 phút</span>
+            </div>
+            <div class="meditation-content">
+              <h3>Thiền hơi thở - 10 phút</h3>
+              <p>Bài tập tập trung vào hơi thở, giúp bạn thả lỏng cơ thể và tâm trí.</p>
+              <div class="meditation-stats">
+                <span><i class="fas fa-play-circle"></i> 2.5k lượt nghe</span>
+                <span><i class="fas fa-heart"></i> 95% hài lòng</span>
+              </div>
+              <audio controls>
+                <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3" type="audio/mpeg">
+                Trình duyệt không hỗ trợ âm thanh.
+              </audio>
+              <p class="meditation-note">Hướng dẫn: Hít vào 4 giây, giữ 4 giây, thở ra 4 giây.</p>
+            </div>
+          </div>
+
+          <div class="meditation-card">
+            <div class="meditation-image">
+              <img src="images/meditation-3.jpg" alt="Thiền chánh niệm">
+              <span class="duration">15 phút</span>
+            </div>
+            <div class="meditation-content">
+              <h3>Thiền chánh niệm - 15 phút</h3>
+              <p>Thực hành chánh niệm để giảm stress và lo âu.</p>
+              <div class="meditation-stats">
+                <span><i class="fas fa-play-circle"></i> 1.8k lượt nghe</span>
+                <span><i class="fas fa-heart"></i> 97% hài lòng</span>
+              </div>
+              <audio controls>
+                <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3" type="audio/mpeg">
+                Trình duyệt không hỗ trợ âm thanh.
+              </audio>
+              <p class="meditation-note">Tập trung vào cảm giác hiện tại, không phán xét.</p>
+            </div>
+          </div>
+
+          <div class="meditation-card">
+            <div class="meditation-image">
+              <img src="images/meditation-4.jpg" alt="Thiền yêu thương">
+              <span class="duration">10 phút</span>
+            </div>
+            <div class="meditation-content">
+              <h3>Thiền yêu thương - 10 phút</h3>
+              <p>Phát triển lòng từ bi và yêu thương bản thân.</p>
+              <div class="meditation-stats">
+                <span><i class="fas fa-play-circle"></i> 1.5k lượt nghe</span>
+                <span><i class="fas fa-heart"></i> 96% hài lòng</span>
+              </div>
+              <audio controls>
+                <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3" type="audio/mpeg">
+                Trình duyệt không hỗ trợ âm thanh.
+              </audio>
+              <p class="meditation-note">Gửi những lời chúc tốt đẹp đến bản thân và người khác.</p>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
 
     <!-- Expert Tab -->
     <section id="expert" class="hidden fade">
-      <h2>Kết nối chuyên gia</h2>
-      <p>Đặt lịch với chuyên gia trị liệu đáng tin cậy.</p>
-      <ul class="expert-list">
-        <li class="expert-item">
-          <div class="expert-info">
-            <p class="expert-name">TS. Lan Nguyễn</p>
-            <p class="expert-specialty">Chuyên gia trị liệu tâm lý – 15 năm kinh nghiệm</p>
+      <div class="section-content">
+        <div class="expert-header">
+          <h2>Chuyên gia trị liệu</h2>
+          <p>Kết nối với các chuyên gia tâm lý giàu kinh nghiệm</p>
+        </div>
+
+        <div class="expert-filters">
+          <div class="search-box">
+            <i class="fas fa-search"></i>
+            <input type="text" placeholder="Tìm kiếm chuyên gia...">
           </div>
-          <button onclick="openAppointmentModal('TS. Lan Nguyễn')">Đặt lịch</button>
-        </li>
-        <li class="expert-item">
-          <div class="expert-info">
-            <p class="expert-name">ThS. An Trần</p>
-            <p class="expert-specialty">Chuyên gia hỗ trợ trẻ em & gia đình</p>
+          <div class="filter-buttons">
+            <button class="filter-btn active">Tất cả</button>
+            <button class="filter-btn">Trị liệu cá nhân</button>
+            <button class="filter-btn">Trị liệu gia đình</button>
+            <button class="filter-btn">Trị liệu trẻ em</button>
           </div>
-          <button onclick="openAppointmentModal('ThS. An Trần')">Đặt lịch</button>
-        </li>
-      </ul>
+        </div>
+
+        <div class="expert-grid">
+          <div class="expert-card">
+            <div class="expert-image">
+              <img src="images/expert-1.jpg" alt="TS. Lan Nguyễn">
+              <span class="expert-badge">15 năm kinh nghiệm</span>
+            </div>
+            <div class="expert-content">
+              <h3>TS. Lan Nguyễn</h3>
+              <p class="expert-specialty">Chuyên gia trị liệu tâm lý</p>
+              <div class="expert-info">
+                <span><i class="fas fa-graduation-cap"></i> Tiến sĩ Tâm lý học</span>
+                <span><i class="fas fa-language"></i> Tiếng Việt, Tiếng Anh</span>
+              </div>
+              <div class="expert-stats">
+                <div class="stat">
+                  <span class="value">4.9</span>
+                  <span class="label">Đánh giá</span>
+                </div>
+                <div class="stat">
+                  <span class="value">500+</span>
+                  <span class="label">Khách hàng</span>
+                </div>
+                <div class="stat">
+                  <span class="value">15+</span>
+                  <span class="label">Năm kinh nghiệm</span>
+                </div>
+              </div>
+              <p class="expert-description">
+                Chuyên gia trong lĩnh vực trị liệu tâm lý cho người trưởng thành, 
+                đặc biệt là các vấn đề về stress, lo âu và trầm cảm.
+              </p>
+              <div class="expert-actions">
+                <button onclick="openAppointmentModal('TS. Lan Nguyễn')" class="primary">
+                  <i class="fas fa-calendar-alt"></i>
+                  Đặt lịch
+                </button>
+                <button class="secondary">
+                  <i class="fas fa-info-circle"></i>
+                  Xem chi tiết
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="expert-card">
+            <div class="expert-image">
+              <img src="images/expert-2.jpg" alt="ThS. An Trần">
+              <span class="expert-badge">10 năm kinh nghiệm</span>
+            </div>
+            <div class="expert-content">
+              <h3>ThS. An Trần</h3>
+              <p class="expert-specialty">Chuyên gia trị liệu gia đình</p>
+              <div class="expert-info">
+                <span><i class="fas fa-graduation-cap"></i> Thạc sĩ Tâm lý học</span>
+                <span><i class="fas fa-language"></i> Tiếng Việt</span>
+              </div>
+              <div class="expert-stats">
+                <div class="stat">
+                  <span class="value">4.8</span>
+                  <span class="label">Đánh giá</span>
+                </div>
+                <div class="stat">
+                  <span class="value">300+</span>
+                  <span class="label">Khách hàng</span>
+                </div>
+                <div class="stat">
+                  <span class="value">10+</span>
+                  <span class="label">Năm kinh nghiệm</span>
+                </div>
+              </div>
+              <p class="expert-description">
+                Chuyên gia trong lĩnh vực trị liệu gia đình và trẻ em, 
+                có kinh nghiệm trong việc giải quyết các vấn đề về mối quan hệ và phát triển tâm lý.
+              </p>
+              <div class="expert-actions">
+                <button onclick="openAppointmentModal('ThS. An Trần')" class="primary">
+                  <i class="fas fa-calendar-alt"></i>
+                  Đặt lịch
+                </button>
+                <button class="secondary">
+                  <i class="fas fa-info-circle"></i>
+                  Xem chi tiết
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="expert-card">
+            <div class="expert-image">
+              <img src="images/expert-3.jpg" alt="TS. Minh Lê">
+              <span class="expert-badge">12 năm kinh nghiệm</span>
+            </div>
+            <div class="expert-content">
+              <h3>TS. Minh Lê</h3>
+              <p class="expert-specialty">Chuyên gia trị liệu nhận thức</p>
+              <div class="expert-info">
+                <span><i class="fas fa-graduation-cap"></i> Tiến sĩ Tâm lý học</span>
+                <span><i class="fas fa-language"></i> Tiếng Việt, Tiếng Anh</span>
+              </div>
+              <div class="expert-stats">
+                <div class="stat">
+                  <span class="value">4.9</span>
+                  <span class="label">Đánh giá</span>
+                </div>
+                <div class="stat">
+                  <span class="value">400+</span>
+                  <span class="label">Khách hàng</span>
+                </div>
+                <div class="stat">
+                  <span class="value">12+</span>
+                  <span class="label">Năm kinh nghiệm</span>
+                </div>
+              </div>
+              <p class="expert-description">
+                Chuyên gia trong lĩnh vực trị liệu nhận thức hành vi (CBT), 
+                giúp khách hàng thay đổi suy nghĩ và hành vi tiêu cực.
+              </p>
+              <div class="expert-actions">
+                <button onclick="openAppointmentModal('TS. Minh Lê')" class="primary">
+                  <i class="fas fa-calendar-alt"></i>
+                  Đặt lịch
+                </button>
+                <button class="secondary">
+                  <i class="fas fa-info-circle"></i>
+                  Xem chi tiết
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Profile Tab -->
+    <section id="profile" class="hidden fade">
+      <div class="section-content">
+        <div class="profile-header">
+          <div class="profile-avatar">
+            <img src="images/default-avatar.png" alt="Avatar" class="avatar-image">
+            <button class="edit-avatar">
+              <i class="fas fa-camera"></i>
+            </button>
+          </div>
+          <h2 class="profile-name">Nguyễn Văn A</h2>
+          <p class="profile-status">Thành viên từ tháng 5/2024</p>
+        </div>
+
+        <div class="profile-sections">
+          <div class="profile-section">
+            <h3><i class="fas fa-user"></i> Thông tin cá nhân</h3>
+            <div class="profile-info-grid">
+              <div class="info-item">
+                <label>Họ và tên</label>
+                <p>Nguyễn Văn A</p>
+              </div>
+              <div class="info-item">
+                <label>Email</label>
+                <p>example@email.com</p>
+              </div>
+              <div class="info-item">
+                <label>Số điện thoại</label>
+                <p>0123 456 789</p>
+              </div>
+              <div class="info-item">
+                <label>Ngày sinh</label>
+                <p>01/01/1990</p>
+              </div>
+              <div class="info-item">
+                <label>Giới tính</label>
+                <p>Nam</p>
+              </div>
+              <div class="info-item">
+                <label>Địa chỉ</label>
+                <p>Hà Nội, Việt Nam</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="profile-section">
+            <h3><i class="fas fa-cog"></i> Cài đặt</h3>
+            <div class="settings-list">
+              <div class="setting-item">
+                <div class="setting-info">
+                  <label>Ngôn ngữ</label>
+                  <p>Tiếng Việt</p>
+                </div>
+                <button class="icon-button">
+                  <i class="fas fa-chevron-right"></i>
+                </button>
+              </div>
+              <div class="setting-item">
+                <div class="setting-info">
+                  <label>Thông báo</label>
+                  <p>Bật</p>
+                </div>
+                <button class="icon-button">
+                  <i class="fas fa-chevron-right"></i>
+                </button>
+              </div>
+              <div class="setting-item">
+                <div class="setting-info">
+                  <label>Chế độ tối</label>
+                  <p>Tắt</p>
+                </div>
+                <button class="icon-button">
+                  <i class="fas fa-chevron-right"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="profile-section">
+            <h3><i class="fas fa-chart-line"></i> Thống kê</h3>
+            <div class="stats-grid">
+              <div class="stat-item">
+                <div class="stat-value">15</div>
+                <div class="stat-label">Ngày sử dụng</div>
+              </div>
+              <div class="stat-item">
+                <div class="stat-value">8</div>
+                <div class="stat-label">Bài thiền</div>
+              </div>
+              <div class="stat-item">
+                <div class="stat-value">3</div>
+                <div class="stat-label">Lịch hẹn</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="profile-actions">
+            <button class="secondary">
+              <i class="fas fa-edit"></i>
+              Chỉnh sửa thông tin
+            </button>
+            <button class="secondary">
+              <i class="fas fa-sign-out-alt"></i>
+              Đăng xuất
+            </button>
+          </div>
+        </div>
+      </div>
     </section>
 
     <!-- Assessment Modal -->
@@ -234,16 +703,6 @@
         </form>
       </div>
     </div>
-
-    <!-- Profile Tab -->
-    <section id="profile" class="hidden fade">
-      <h2>Hồ sơ cá nhân</h2>
-      <div class="profile-card">
-        <p><strong>Họ tên:</strong> Nguyễn Văn A</p>
-        <p><strong>Email:</strong> example@email.com</p>
-        <p><strong>Ngôn ngữ:</strong> Tiếng Việt</p>
-      </div>
-    </section>
   </main>
 
   <!-- Bottom Navigation -->
